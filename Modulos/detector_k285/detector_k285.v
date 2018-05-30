@@ -12,14 +12,6 @@ module detector_k285(
 );
 
 
-  parameter [7:0] COM = 8'hBC;  
-  parameter [7:0] STP = 8'hFB;
-  parameter [7:0] SDP = 8'h5C;
-  parameter [7:0] SKP = 8'h1C;
-  parameter [7:0] END = 8'hFD;
-  parameter [7:0] EDB = 8'hFE;
-  parameter [7:0] FTS = 8'h3C;
-  parameter [7:0] IDLE = 8'h7C;
   //Entradas y salidas
   input wire clk;			
   input wire rst;
@@ -28,6 +20,17 @@ module detector_k285(
   output reg k285;		
   output reg rx_Valid;
   output reg [7:0] rx_DataS;
+  //parametros
+
+  parameter [7:0] COM = 8'hBC;  
+  parameter [7:0] STP = 8'hFB;
+  parameter [7:0] SDP = 8'h5C;
+  parameter [7:0] SKP = 8'h1C;
+  parameter [7:0] END = 8'hFD;
+  parameter [7:0] EDB = 8'hFE;
+  parameter [7:0] FTS = 8'h3C;
+  parameter [7:0] IDLE = 8'h7C;
+
 
   always @ (posedge clk) begin
     if (rst) begin
