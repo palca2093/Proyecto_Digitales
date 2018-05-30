@@ -8,7 +8,6 @@ module detector_k285(
   rx_DataE,				// array de rx_DataE de datos del canal RX
   rx_Valid,				// rx_Valid == 0, señál de control, rx_Valid == 1 señal de datos o IDLE
   k285, 				// indica que se detecto señal k28.5
-  rx_Valid, 				// indica el estado del receptor:  modo rx_Valid o lectura  (1) o señal de control (0)
   rx_DataS				//array de salida con la informacion, indistinto de si es data o señal de control
 );
 
