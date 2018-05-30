@@ -6,44 +6,52 @@ module detector_k285(
   rst,					//reset
   enb,					//enb
   rx_DataE,				// array de rx_DataE de datos del canal RX
-  rx_Valid,				// lo mismo que control_dk pero como salida
+  rx_Valid,				// rx_Valid == 0, señál de control, rx_Valid == 1 señal de datos o IDLE
   k285, 				// indica que se detecto señal k28.5
   rx_Valid, 				// indica el estado del receptor:  modo rx_Valid o lectura  (1) o señal de control (0)
   rx_DataS				//array de salida con la informacion, indistinto de si es data o señal de control
 );
 
-  // Valor del simbolo K.28.5
-  //   dec 188
-  //   hex BC
-  //   HGF EDCBA 101 11100
-  //   rd -1 abcdei fghj 001111 1010
-  //   rd +1 abcdei fghj 110000 0101
-  //
-  // 
-  // Version de 8 bits de la COM va aqui 
-  parameter vk285 = 8h'BC;  
-  
-  
+
+  parameter [7:0] COM = 8'hBC;  
+  parameter [7:0] STP = 8'hFB;
+  parameter [7:0] SDP = 8'h5C;
+  parameter [7:0] SKP = 8'h1C;
+  parameter [7:0] END = 8'hFD;
+  parameter [7:0] EDB = 8'hFE;
+  parameter [7:0] FTS = 8'h3C;
+  parameter [7:0] IDLE = 8'h7C;
   //Entradas y salidas
   input wire clk;			
   input wire rst;
   input wire enb;
-  input reg [7:0] rx_DataE;		 
+  input wire [7:0] rx_DataE;		 
   output reg k285;		
   output reg rx_Valid;
-  output reg rx_Valid;
-  output reg rx_DataS;
+  output reg [7:0] rx_DataS;
 
   always @ (posedge clk) begin
     if (rst) begin
       k285 <= 0;			
-      rx_Valid <= 0;				//deshabilita la bandera de lectura
+   // rx_Valid <= 0;				//deshabilita la bandera de lectura
     end else if (!rst && enb ) begin
-      	rx_DataS <= rx_DataE			//Se pasa el byte de entrada a la salida.
-        k285 <= (rx_DataS == vk285);		//se cambia el estado rx_Valid
-        rx_Valid <= k285 ? ~rx_Valid : rx_Valid;   //Si k285==1  ~rx_Valid, si k285==0 rx_Valid
-        end
+		rx_DataS <= rx_DataE;			//Se pasa el byte de entrada a la salida.
+		k285 <= ( rx_DataS == COM );		//se cambia el estado rx_Valid
+							//solo se indicara cuando se detecta un COM pero no se implementara funcionalidad con el
+	//       rx_Valid <= k285 ? ~rx_Valid : rx_Valid;   //Si k285==1  ~rx_Valid, si k285==0 rx_Valid
+		case (rx_DataE)
+			STP: rx_Valid <= 1;
+			SDP: rx_Valid <= 1;
+			SKP: rx_Valid <= 1;
+			END: rx_Valid <= 1;
+			EDB: rx_Valid <= 1;
+			FTS: rx_Valid <= 1;
+			COM: rx_Valid <= 1;
+			default: rx_Valid <= 0;
+					
+		endcase
+
+	end
     end
-  end
 endmodule
 
