@@ -1,5 +1,5 @@
-read_verilog Byte_Striping.v
-hierarchy -check -top Byte_Striping
+read_verilog detector_k285.v
+hierarchy -check -top detector_k285
 proc;
 opt;
 fsm;
@@ -12,4 +12,4 @@ write_verilog rtlil.v
 dfflibmap -liberty cmos_cells.lib;
 abc -liberty cmos_cells.lib;
 clean
-write_verilog BS_sintetizado.v
+write_verilog DK_sintetizado.v
